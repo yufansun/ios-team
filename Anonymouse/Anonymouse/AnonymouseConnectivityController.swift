@@ -22,6 +22,8 @@ extension MCSessionState {
 
 class AnonymouseConnectivityController : NSObject, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCSessionDelegate {
     
+    //Hash set for compare
+    var visitedMessages: Set<String>
     //MARK: Links
     weak var dataController: AnonymouseDataController!
     
@@ -123,6 +125,20 @@ class AnonymouseConnectivityController : NSObject, MCNearbyServiceAdvertiserDele
         } catch let error as NSError {
             NSLog("%@", error)
         }
+    }
+    
+    //Compare message function
+    //Uses hash set to avoid redundancy in sending messages
+    func hashHasAlreadyBeenBroadcasted(hashToSend: String){
+        if (!visitedMessages.contains(hashToSend)) {
+            visitedMessages.add(hashToSend);
+            return false;
+        }
+        return true;
+    }
+    
+    func addReceivedHash(hashReceived: String) {
+        visitedMessages.add(hashReceived);
     }
     
     //MARK: MCNearbyServiceBrowserDelegate Methods
