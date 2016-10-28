@@ -9,9 +9,10 @@ import CryptoSwift
 import UIKit
 import CoreData
 
-class AnonymouseTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class AnonymouseTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
     var managedObjectContext: NSManagedObjectContext!
     var detailViewController: AnonymouseDetailViewController!
+    var searchController: AnonymouseSearchController!
     
     lazy var fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = {
         // Initialize Fetch Request
@@ -30,9 +31,27 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         return fetchedResultsController
     }()
     
+    // TODO
+//    lazy var searchFetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = {
+//        //Initialize Fetch Request
+//        let fetchRequest: NSFetchRequest<AnonymouseMessageCore> = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
+//        
+//        //Add Sort Descriptors
+//        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//        
+//        //Initialize Fetched Results Controller
+//        let fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+//        
+//        //Configure Fetched Results Controller
+//        fetchedResultsController.delegate = self
+//        
+//        return fetchedResultsController
+//    }()
+    
     override func viewDidLoad() {
         detailViewController = AnonymouseDetailViewController()
-    
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -69,6 +88,13 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
             self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
         }
         
+        //Initialize search controller (but not show it in the table view)
+        searchController = AnonymouseSearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = nil
+        
         //Set up the tableView style
         self.tableView.backgroundColor = UIColor.groupTableViewBackground
         self.tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -85,6 +111,15 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     func refreshControlDidChangeValue() {
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
+    }
+    
+    //MARK: Scroll to show searchBar
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let yPos: CGFloat = -scrollView.contentOffset.y
+    
+        if (yPos > 0) {
+            tableView.tableHeaderView = searchController.searchBar
+        }
     }
     
     //MARK: tableViewControllerDelegate
@@ -208,5 +243,10 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         
         // Present Alert Controller
         present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: UISearchResultsUpdating
+    func updateSearchResults(for searchController: UISearchController) {
+        // TODO
     }
 }

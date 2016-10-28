@@ -29,6 +29,7 @@
 		1AD52A961D9964A9000F13DE /* AnonymouseNavigationStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD52A951D9964A9000F13DE /* AnonymouseNavigationStyleController.swift */; };
 		1AF2D0671C97856300670C89 /* AnonymouseComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2D0661C97856300670C89 /* AnonymouseComposeViewController.swift */; };
 		1AFEDAE61D986BBC00690EB5 /* AnonymouseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFEDAE51D986BBC00690EB5 /* AnonymouseTabBarController.swift */; };
+		7DA3A7BA1DC3C6DF00CF7390 /* AnonymouseSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA3A7B91DC3C6DF00CF7390 /* AnonymouseSearchController.swift */; };
 		7DD0BBB41CBC349000CF2268 /* Anonymouse.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BBB21CBC349000CF2268 /* Anonymouse.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +102,7 @@
 		1AD52A951D9964A9000F13DE /* AnonymouseNavigationStyleController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseNavigationStyleController.swift; sourceTree = "<group>"; };
 		1AF2D0661C97856300670C89 /* AnonymouseComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseComposeViewController.swift; sourceTree = "<group>"; };
 		1AFEDAE51D986BBC00690EB5 /* AnonymouseTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseTabBarController.swift; sourceTree = "<group>"; };
+		7DA3A7B91DC3C6DF00CF7390 /* AnonymouseSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseSearchController.swift; sourceTree = "<group>"; };
 		7DD0BBB31CBC349000CF2268 /* Anonymouse.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Anonymouse.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,6 +136,7 @@
 				1AF2D0661C97856300670C89 /* AnonymouseComposeViewController.swift */,
 				1ABE12E91C9750A6005923BA /* AnonymouseTableViewController.swift */,
 				1A932A581DB3D37A004294A9 /* AnonymouseDetailViewController.swift */,
+				7DA3A7B91DC3C6DF00CF7390 /* AnonymouseSearchController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				1AD52A961D9964A9000F13DE /* AnonymouseNavigationStyleController.swift in Sources */,
 				1AFEDAE61D986BBC00690EB5 /* AnonymouseTabBarController.swift in Sources */,
 				1A42E0301CBED2A100E6EE86 /* Anonymouse+CoreDataProperties.swift in Sources */,
+				7DA3A7BA1DC3C6DF00CF7390 /* AnonymouseSearchController.swift in Sources */,
 				1A42E0311CBED2A100E6EE86 /* AnonymouseMessageCore.swift in Sources */,
 				1A932A591DB3D37A004294A9 /* AnonymouseDetailViewController.swift in Sources */,
 				1AF2D0671C97856300670C89 /* AnonymouseComposeViewController.swift in Sources */,
