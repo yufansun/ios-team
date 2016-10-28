@@ -21,6 +21,7 @@ class AnonymouseTableViewCell : UITableViewCell {
     fileprivate static let userFont: UIFont = UIFont(name: "Helvetica-Bold", size: 19.0)!
     fileprivate static let spacing: CGFloat = 47.0
     
+    //Controll the cell height in DetailView
     static func getCellHeight(withMessageText text: String) -> CGFloat {
         let messageLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 340.0, height: CGFloat.greatestFiniteMagnitude))
         messageLabel.numberOfLines = 0
@@ -28,9 +29,11 @@ class AnonymouseTableViewCell : UITableViewCell {
         messageLabel.font = messageFont
         messageLabel.text = text
         messageLabel.sizeToFit()
+        
         return messageLabel.frame.size.height + spacing + featuresBarHeight
     }
     
+    //Controll the cell height in TableView
     static func getClippedCellHeight(withMessageText text: String) -> CGFloat {
         let messageLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 340.0, height: CGFloat.greatestFiniteMagnitude))
         messageLabel.numberOfLines = 3
@@ -38,6 +41,7 @@ class AnonymouseTableViewCell : UITableViewCell {
         messageLabel.font = messageFont
         messageLabel.text = text
         messageLabel.sizeToFit()
+        
         return messageLabel.frame.size.height + spacing + featuresBarHeight
     }
     

@@ -115,9 +115,9 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     
     //MARK: Scroll to show searchBar
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let yPos: CGFloat = -scrollView.contentOffset.y
-    
-        if (yPos > 0) {
+        let yPos: CGFloat = scrollView.contentOffset.y
+        print(yPos)
+        if (tableView.tableHeaderView == nil && yPos < 0) {
             tableView.tableHeaderView = searchController.searchBar
         }
     }
