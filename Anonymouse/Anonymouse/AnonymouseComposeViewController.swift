@@ -10,13 +10,16 @@ import UIKit
 
 class AnonymouseComposeViewController: UIViewController, UITextViewDelegate {
     var composeTextView: UITextView!
+    let maxCharacters: Int = 301
     let textViewMargins: Int = 20
     let placeholderText: String = "Post something to the world!"
     var placeholderLabel: UILabel!
+    var charactersLeftLabel: UILabel!
     
     weak var dataController: AnonymouseDataController!
     weak var connectivityController: AnonymouseConnectivityController!
     
+    //MARK: Navigation
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.white
         
@@ -30,6 +33,11 @@ class AnonymouseComposeViewController: UIViewController, UITextViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(AnonymouseComposeViewController.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil);
         
         self.title = "Post to Feed"
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(AnonymouseComposeViewController.cancelTapped))
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Post", style: .done, target: self, action: #selector(AnonymouseComposeViewController.postTapped))
+        self.navigationItem.rightBarButtonItem!.isEnabled = false
         
         composeTextView.frame = CGRect(x: CGFloat(textViewMargins), y: 0, width: self.view.bounds.width - CGFloat(textViewMargins), height: self.view.bounds.height)
         composeTextView.delegate = self
@@ -46,9 +54,17 @@ class AnonymouseComposeViewController: UIViewController, UITextViewDelegate {
         
         placeholderLabel.textColor = UIColor.lightGray
         
-        self.view.addSubview(placeholderLabel)
+        charactersLeftLabel = UILabel()
+        charactersLeftLabel.font = composeTextView.font
+        charactersLeftLabel.textColor = UIColor.lightGray
+        charactersLeftLabel.text = "\(maxCharacters - 1)"
+        charactersLeftLabel.sizeToFit()
+        
+        charactersLeftLabel.frame.origin.x = CGFloat(textViewMargins)
+        
         composeTextView.addSubview(placeholderLabel)
         self.view.addSubview(composeTextView)
+        self.view.addSubview(charactersLeftLabel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +76,19 @@ class AnonymouseComposeViewController: UIViewController, UITextViewDelegate {
         composeTextView.resignFirstResponder()
     }
     
+    func cancelTapped() {
+        self.dismiss(animated: true) { () -> Void in
+            self.clearText()
+        }
+    }
+    
+    func postTapped() {
+        self.dismiss(animated: true) { () -> Void in
+            self.post()
+        }
+    }
+    
+    //MARK: TextView Methods
     func textViewDidChange(_ textView: UITextView) {
         placeholderLabel.isHidden = !textView.text.isEmpty
         if textView.text.characters.count > 0 {
@@ -71,29 +100,62 @@ class AnonymouseComposeViewController: UIViewController, UITextViewDelegate {
         }
     }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let nsString: NSString = textView.text! as NSString
+        let numCharacters: Int = nsString.replacingCharacters(in: range, with: text).characters.count
+        let remainingCharacters: Int = maxCharacters - numCharacters
+        
+        if remainingCharacters < 40 {
+            charactersLeftLabel.textColor = UIColor.red
+            charactersLeftLabel.alpha = 0.7
+        } else {
+            charactersLeftLabel.textColor = UIColor.lightGray
+            charactersLeftLabel.alpha = 1.0
+        }
+        
+        if remainingCharacters < 1 {
+            return false
+        }
+        
+        charactersLeftLabel.text = "\(remainingCharacters - 1)"
+        return true
+    }
+    
+    //MARK: Keyboard Methods
     func keyboardWillShow(_ notification: Notification) {
         var info = (notification as NSNotification).userInfo!
         let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        self.charactersLeftLabel.frame.origin.y = self.view.frame.height - keyboardFrame.height - 30.0
+        
         UIView.animate(withDuration: 0.1, animations: {() -> Void in
-            self.composeTextView.frame.size.height = keyboardFrame.height
+            self.composeTextView.frame.size.height = self.charactersLeftLabel.frame.origin.y - 10.0
+            self.composeTextView.frame.origin.y = 0
         })
     }
     
     func keyboardWillHide(_ notification: Notification) {
-        var info = (notification as NSNotification).userInfo!
-        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        UIView.animate(withDuration: 0.1, animations: {() -> Void in
-            self.composeTextView.frame.size.height += keyboardFrame.height
-        })
+        //        var info = (notification as NSNotification).userInfo!
+        //        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        //        UIView.animate(withDuration: 0.1, animations: {() -> Void in
+        //            self.composeTextView.frame.size.height = self.view.bounds.height
+        //            self.composeTextView.frame.origin.y = 0
+        //        })
     }
     
     override var canBecomeFirstResponder : Bool {
         return true
     }
     
+    
+    //MARK: Convenience methods
     func clearText() {
         composeTextView.text = ""
         placeholderLabel.isHidden = false
+        
+        charactersLeftLabel.text = "\(maxCharacters - 1)"
+        charactersLeftLabel.textColor = UIColor.lightGray
+        charactersLeftLabel.alpha = 1.0
     }
     
     func post() {

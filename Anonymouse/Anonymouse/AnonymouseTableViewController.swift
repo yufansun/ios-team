@@ -13,17 +13,23 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     var managedObjectContext: NSManagedObjectContext!
     var detailViewController: AnonymouseDetailViewController!
     var searchController: AnonymouseSearchController!
+    var fetchRequest: NSFetchRequest<AnonymouseMessageCore>
     
-    lazy var fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = {
-        // Initialize Fetch Request
-        let fetchRequest: NSFetchRequest<AnonymouseMessageCore> = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
-        
-        // Add Sort Descriptors
+    init(withFetchRequest fetchRequest: NSFetchRequest<AnonymouseMessageCore>) {
+        self.fetchRequest = fetchRequest
+        super.init(style: UITableViewStyle.plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.fetchRequest = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        
+        super.init(coder: aDecoder)
+    }
+    
+    lazy var fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = {
         // Initialize Fetched Results Controller
-        let fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchedResultsController: NSFetchedResultsController<AnonymouseMessageCore> = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Configure Fetched Results Controller
         fetchedResultsController.delegate = self
@@ -51,7 +57,6 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     
     override func viewDidLoad() {
         detailViewController = AnonymouseDetailViewController()
-
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -104,7 +109,11 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         self.refreshControl?.backgroundColor = UIColor.groupTableViewBackground
         self.refreshControl?.tintColor = UIColor.darkGray
         self.refreshControl?.addTarget(self, action: #selector(self.refreshControlDidChangeValue), for: UIControlEvents.valueChanged)
-        self.title = "Most Recent"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
     }
     
     //MARK: UIRefreshControl
