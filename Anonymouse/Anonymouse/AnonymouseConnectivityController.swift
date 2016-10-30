@@ -118,6 +118,27 @@ class AnonymouseConnectivityController : NSObject, MCNearbyServiceAdvertiserDele
         }
     }
     
+    //MARK: send filtered messages
+    //Uses hash set to eliminate redundant messages before sending
+    func sendFilteredMessages(toRequesters ids: [MCPeerID]) {
+        let messageCoreArray: [AnonymouseMessageCore] = dataController.fetchObjects(withKey: "date", ascending: true)
+        var messageSentArray: [AnonymouseMessageSentCore] = messageCoreArray.map { (messageCore) -> AnonymouseMessageSentCore in
+            return AnonymouseMessageSentCore(message: messageCore)
+        }
+        //filter messageSentArray
+        for (index, message) in messageSentArray.enumerated(){
+            if hashHasAlreadyBeenBroadcasted(hashToSend: message.messageHash){
+                messageSentArray.remove(index)
+            }
+        }
+        do {
+            let archivedSentArray: Data = NSKeyedArchiver.archivedData(withRootObject: messageSentArray)
+            try self.sessionObject.send(archivedSentArray, toPeers: ids, with: MCSessionSendDataMode.reliable)
+        } catch let error as NSError {
+            NSLog("%@", error)
+        }
+    }
+    
     func send(individualMessage message: AnonymouseMessageSentCore) {
         do {
             let archivedMessage: Data = NSKeyedArchiver.archivedData(withRootObject: message)
@@ -131,14 +152,14 @@ class AnonymouseConnectivityController : NSObject, MCNearbyServiceAdvertiserDele
     //Uses hash set to avoid redundancy in sending messages
     func hashHasAlreadyBeenBroadcasted(hashToSend: String){
         if (!visitedMessages.contains(hashToSend)) {
-            visitedMessages.add(hashToSend);
+            visitedMessages.insert(hashToSend);
             return false;
         }
         return true;
     }
     
     func addReceivedHash(hashReceived: String) {
-        visitedMessages.add(hashReceived);
+        visitedMessages.insert(hashReceived);
     }
     
     //MARK: MCNearbyServiceBrowserDelegate Methods
