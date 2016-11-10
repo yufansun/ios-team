@@ -89,14 +89,35 @@ class AnonymouseProfileViewController: UIViewController, UITextFieldDelegate {
             usernameTextField.isHidden = true
             usernameLabel.isHidden = false
             
-            usernameLabel.text = usernameTextField.text
-            //Username is set here. This is a bit of a hack
-            let userPreferences: UserDefaults = UserDefaults.standard
-            userPreferences.set(usernameLabel.text!, forKey: "username")
+            if usernameLabel.text != usernameTextField.text {
+                usernameLabel.text = usernameTextField.text
+                //Username is set here. This is a bit of a hack
+                let userPreferences: UserDefaults = UserDefaults.standard
+                userPreferences.set(usernameLabel.text!, forKey: "username")
+                userPreferences.set(Date(), forKey: "timeUpdateUsername")
+            }
             
             editButton.title = "Edit"
             editButton.style = UIBarButtonItemStyle.plain
         } else {
+            //Get the last time the user updated the uername
+            if let lastTimeUpdateUsername = UserDefaults.standard.object(forKey: "timeUpdateUsername") as! Date! {
+                
+                //Calculate the date difference since last update of username
+                let secondsSinceLastUpdate: TimeInterval = abs(lastTimeUpdateUsername.timeIntervalSinceNow)
+                
+                // Disable update of username if it has been less than seven days since last update
+                if secondsSinceLastUpdate < 604800 {
+                    let unableUpdateUsernameAlert: UIAlertController = UIAlertController(title: "Unable to update username", message: "Please do not update username more than once in a week", preferredStyle: UIAlertControllerStyle.alert)
+                    unableUpdateUsernameAlert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: { (action) in
+                        self.usernameTextField.becomeFirstResponder()
+                    }))
+                    
+                    self.present(unableUpdateUsernameAlert, animated: true, completion: nil)
+                    return
+                }
+            }
+            
             usernameTextField.isHidden = false
             usernameLabel.isHidden = true
             
@@ -115,7 +136,7 @@ class AnonymouseProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let nsString = textField.text! as NSString
+        let nsString: NSString = textField.text! as NSString
         if string == " " {
             textField.text = nsString.replacingCharacters(in: range, with: "_")
             return false
