@@ -12,7 +12,7 @@ import CoreData
 class AnonymouseTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
     var managedObjectContext: NSManagedObjectContext!
     var detailViewController: AnonymouseDetailViewController!
-    var searchController: AnonymouseSearchController!
+    var searchController: UISearchController!
     var fetchRequest: NSFetchRequest<AnonymouseMessageCore>
     var searchRequest: NSFetchRequest<AnonymouseMessageCore>
     
@@ -90,7 +90,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         }
         
         //Initialize search controller (but not show it in the table view yet)
-        searchController = AnonymouseSearchController(searchResultsController: nil)
+        searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
