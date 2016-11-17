@@ -17,12 +17,14 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     var searchRequest: NSFetchRequest<AnonymouseMessageCore>
     
     init(withFetchRequest fetchRequest: NSFetchRequest<AnonymouseMessageCore>) {
+        print("in init")
         self.fetchRequest = fetchRequest
         self.searchRequest = fetchRequest
         super.init(style: UITableViewStyle.plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
+        print("in init?")
         self.fetchRequest = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
         self.searchRequest = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: false)
@@ -52,6 +54,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }()
     
     func performDetailTransition(notification: Notification) {
+        print("in performDetailTransition")
+        
         guard self.view.window != nil else {
             return
         }
@@ -65,8 +69,9 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
             self.navigationController!.pushViewController(detailViewController, animated: true)
         }
     }
-    
+
     override func viewDidLoad() {
+        print("in viewDidLoad")
         detailViewController = AnonymouseDetailViewController()
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -113,6 +118,11 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         definesPresentationContext = true
         tableView.tableHeaderView = nil
         
+        
+        // TODO
+        self.automaticallyAdjustsScrollViewInsets = false
+        tableView.contentInset = UIEdgeInsets.zero;
+        
         //Set up the tableView style
         self.tableView.backgroundColor = UIColor.groupTableViewBackground
         self.tableView.cellLayoutMarginsFollowReadableWidth = false
@@ -125,12 +135,14 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear")
         super.viewWillAppear(animated)
         self.tableView.reloadData()
     }
     
     //MARK: UIRefreshControl
     func refreshControlDidChangeValue() {
+        print("refreshControlDidChangeValue")
         self.tableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
@@ -139,6 +151,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yPos: CGFloat = scrollView.contentOffset.y
         print(yPos)
+
         if (tableView.tableHeaderView == nil && yPos < 0) {
             tableView.tableHeaderView = searchController.searchBar
         }
@@ -146,6 +159,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     
     //MARK: tableViewControllerDelegate
     override func numberOfSections(in tableView: UITableView) -> Int {
+        print("in numberOfSections")
         if let sections: [NSFetchedResultsSectionInfo] = fetchedResultsController.sections {
             return sections.count
         }
@@ -155,6 +169,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     //This function is part of UITableViewController's built-in classes.
     //It asks for the number of rows in tableView = number of messages = size of cellDataArray.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("in tableView 1")
+        
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
         if searchController.isActive && searchController.searchBar.text != "" {
@@ -175,6 +191,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     //In it, we tell the tableView which message to render at each index of the table.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //Grab the appropriate data from our cellDataArray.
+        
+        print("in tableView 2")
         
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
@@ -211,6 +229,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         //Notice that MCChatCellData already have a property called cellHeight
         //that depends on the size of the message.
         
+        print("in tableView 3")
+        
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
         if searchController.isActive && searchController.searchBar.text != "" {
@@ -225,6 +245,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("in tableView 4")
+        
         if let selectedCell: AnonymouseTableViewCell = tableView.cellForRow(at: indexPath) as? AnonymouseTableViewCell {
             detailViewController.cellData = selectedCell.data!
             self.navigationController!.pushViewController(detailViewController, animated: true)
@@ -233,16 +255,21 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     
     // MARK: Fetched Results Controller Delegate Methods
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("in controllerWillChangeContent 1")
         tableView.beginUpdates()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("in controllerWillChangeContent 2")
         tableView.endUpdates()
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        print("in controller 1")
+        
         switch (type) {
         case .insert:
+            print("insert!!!")
             if let indexPath = newIndexPath {
                 tableView.insertRows(at: [indexPath], with: .fade)
             }
@@ -267,6 +294,8 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }
     
     func controller(controller: NSFetchedResultsController<AnonymouseMessageCore>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        print("in controller")
+        
         switch type {
         case .insert:
             tableView.insertSections(NSIndexSet(index: sectionIndex) as IndexSet, with: .fade)
@@ -295,10 +324,12 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     
     // MARK: UISearchResultsUpdating
     func updateSearchResults(for searchController: UISearchController) {
+        print("in updateSearchResults")
         filterContentForSearchResult(searchText: searchController.searchBar.text!)
     }
     
     func filterContentForSearchResult(searchText: String, scope: String = "All") {
+        print("in filterContentForSearchResult")
         let predicate = NSPredicate(format: "text contains[c] %@", searchText)
         fetchRequest.predicate = predicate
         do {
