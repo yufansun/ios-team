@@ -50,7 +50,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         
         return searchResultsController
     }()
-        
+    
     func performDetailTransition(notification: Notification) {
         guard self.view.window != nil else {
             return
@@ -66,7 +66,6 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         }
     }
     
->>>>>>> master
     override func viewDidLoad() {
         detailViewController = AnonymouseDetailViewController()
         self.tableView.delegate = self
