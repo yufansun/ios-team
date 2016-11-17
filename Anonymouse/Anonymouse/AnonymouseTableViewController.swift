@@ -51,12 +51,30 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         return searchResultsController
     }()
         
+    func performDetailTransition(notification: Notification) {
+        guard self.view.window != nil else {
+            return
+        }
+    
+        guard let dictionary = notification.userInfo as? [String: AnonymouseTableViewCell] else {
+            return
+        }
+        if let selectedCell = dictionary["cell"] {
+            detailViewController.cellData = selectedCell.data!
+            detailViewController.shouldDisplayReply = true
+            self.navigationController!.pushViewController(detailViewController, animated: true)
+        }
+    }
+    
+>>>>>>> master
     override func viewDidLoad() {
         detailViewController = AnonymouseDetailViewController()
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
         tableView.register(AnonymouseTableViewCell.self, forCellReuseIdentifier: "AnonymouseTableViewCell")
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(AnonymouseTableViewController.performDetailTransition), name: NSNotification.Name("messageWasRepliedTo"), object: nil)
         
         //Reference the appDelegate to recover the managedObjectContext
         unowned let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -208,10 +226,10 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var anonymouseMessageCoreData: AnonymouseMessageCore = fetchedResultsController.object(at: indexPath)
-        
-        detailViewController.createNewCell(withData: &anonymouseMessageCoreData)
-        self.navigationController!.pushViewController(detailViewController, animated: true)
+        if let selectedCell: AnonymouseTableViewCell = tableView.cellForRow(at: indexPath) as? AnonymouseTableViewCell {
+            detailViewController.cellData = selectedCell.data!
+            self.navigationController!.pushViewController(detailViewController, animated: true)
+        }
     }
     
     // MARK: Fetched Results Controller Delegate Methods
@@ -235,9 +253,10 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
             }
         case .update:
             if let indexPath = indexPath {
-                let cell = tableView.cellForRow(at: indexPath) as! AnonymouseTableViewCell
-                let anonymouseMessageCoreData = fetchedResultsController.object(at: indexPath)
-                cell.data = anonymouseMessageCoreData
+                if let cell = tableView.cellForRow(at: indexPath) as? AnonymouseTableViewCell {
+                    let anonymouseMessageCoreData = fetchedResultsController.object(at: indexPath)
+                    cell.data = anonymouseMessageCoreData
+                }
             }
             
             break;

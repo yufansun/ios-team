@@ -11,6 +11,8 @@ import CoreData
 
 class AnonymouseDataController: NSObject {
     var managedObjectContext: NSManagedObjectContext
+    let maxMessages: Int = 1000
+    let blockSize: Int = 50
     
     override init() {
         
@@ -142,6 +144,14 @@ class AnonymouseDataController: NSObject {
     
     func addMessage(_ text: String, date: Date, user: String) {
         //Create a message object from the input parameters.
+        let currentSize: Int = self.getSize()
+        
+        if currentSize > maxMessages {
+            let numBlocksToDelete: Int = (currentSize - maxMessages) / blockSize
+            for _ in 0..<numBlocksToDelete {
+                self.deleteMessageBlock()
+            }
+        }
         
         //The creation of this object inserts it into the context
         let _: AnonymouseMessageCore = AnonymouseMessageCore(text: text, date: date, user: user)
@@ -173,6 +183,20 @@ class AnonymouseDataController: NSObject {
     
     func clearContext() {
         for managedObject in self.fetchObjects(withKey: "date", ascending: true) {
+            self.managedObjectContext.delete(managedObject)
+        }
+        
+        self.saveContext()
+    }
+    
+    func getSize() -> Int {
+        //Get how many messages are in the core
+        return fetchObjects(withKey: "date", ascending: true).count
+    }
+    
+    func deleteMessageBlock() {
+        let managedObjects: [AnonymouseMessageCore] = self.fetchObjects(withKey: "date", ascending: true)
+        for managedObject in managedObjects[0..<blockSize] {
             self.managedObjectContext.delete(managedObject)
         }
         

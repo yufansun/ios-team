@@ -50,13 +50,17 @@ class AnonymouseTableViewCell : UITableViewCell {
     var messageLabel: UILabel?
     var userLabel: UILabel?
     var whiteBackdrop: UIView?
-    var grayLine: UIView?
     var grayFeatureBar: UIView?
     var upvoteButton: UIButton?
     var downvoteButton: UIButton?
     var favoriteButton: UIButton?
     var numLikes: UILabel?
-    var divider: UIView?
+    var divider1: UIView?
+    var divider2: UIView?
+    var replyButton: UIButton?
+    var replyLabel: UILabel?
+    
+    var isInTable: Bool = true
     
     //Once we set the message data, update this cell's UI
     var data: AnonymouseMessageCore?
@@ -68,19 +72,31 @@ class AnonymouseTableViewCell : UITableViewCell {
     }
     
     func highlightBackground() {
-        if let wb = whiteBackdrop, let gb = grayFeatureBar, let gl = grayLine {
-            wb.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
-            gb.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
-            gl.backgroundColor = UIColor(white: 0.6, alpha: 1.0)
-        }
+        guard let wb = whiteBackdrop else { return }
+        guard let gb = grayFeatureBar else { return }
+        guard let d1 = divider1 else { return }
+        guard let d2 = divider2 else { return }
+        
+        wb.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        gb.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
+        wb.layer.borderColor = UIColor(white: 0.6, alpha: 1.0).cgColor
+        gb.layer.borderColor = UIColor(white: 0.6, alpha: 1.0).cgColor
+        d1.backgroundColor = UIColor(white: 0.6, alpha: 1.0)
+        d2.backgroundColor = UIColor(white: 0.6, alpha: 1.0)
     }
     
     func releaseBackground() {
-        if let wb = whiteBackdrop, let gb = grayFeatureBar, let gl = grayLine {
-            wb.backgroundColor = UIColor.white
-            gb.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
-            gl.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
-        }
+        guard let wb = whiteBackdrop else { return }
+        guard let gb = grayFeatureBar else { return }
+        guard let d1 = divider1 else { return }
+        guard let d2 = divider2 else { return }
+        
+        wb.backgroundColor = UIColor.white
+        gb.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
+        wb.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        gb.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        d1.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+        d2.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -114,9 +130,6 @@ class AnonymouseTableViewCell : UITableViewCell {
         self.contentView.backgroundColor = UIColor.clear
         self.backgroundColor = UIColor.clear
         self.selectionStyle = UITableViewCellSelectionStyle.none
-        if grayLine == nil {
-            createGrayLine()
-        }
         
         if grayFeatureBar == nil {
             createGrayFeatureBar()
@@ -140,7 +153,7 @@ class AnonymouseTableViewCell : UITableViewCell {
     }
     
     func createMessageLabel(withNumberOfLines numberOfLines: Int) {
-        let messageWidth = UIScreen.main.bounds.width * 0.9
+        let messageWidth: CGFloat = UIScreen.main.bounds.width * 0.9
         messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: messageWidth, height: CGFloat.greatestFiniteMagnitude))
         messageLabel!.numberOfLines = numberOfLines
         messageLabel!.lineBreakMode = NSLineBreakMode.byTruncatingTail
@@ -156,18 +169,15 @@ class AnonymouseTableViewCell : UITableViewCell {
         whiteBackdrop!.frame.origin.y += 10
         whiteBackdrop!.frame.origin.x += 10
         whiteBackdrop!.layer.cornerRadius = 2.0
-        whiteBackdrop!.layer.shadowOffset = CGSize(width: -1, height: 1)
-        whiteBackdrop!.layer.shadowOpacity = 0.2
         whiteBackdrop!.backgroundColor = UIColor.white
+        whiteBackdrop!.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        whiteBackdrop!.layer.borderWidth = 1.0
         
         self.contentView.addSubview(whiteBackdrop!)
         self.contentView.sendSubview(toBack: whiteBackdrop!)
         
-        grayLine!.frame.size.width = whiteBackdrop!.frame.width
-        grayLine!.frame.origin.y = whiteBackdrop!.frame.height - AnonymouseTableViewCell.featuresBarHeight + 9
-        
         grayFeatureBar!.frame.size.width = whiteBackdrop!.frame.width
-        grayFeatureBar!.frame.origin.y = grayLine!.frame.origin.y + 1
+        grayFeatureBar!.frame.origin.y = whiteBackdrop!.frame.height - AnonymouseTableViewCell.featuresBarHeight + 10
         
         updateFeatureBar()
     }
@@ -179,7 +189,7 @@ class AnonymouseTableViewCell : UITableViewCell {
         guard let likeStatus = messageData.likeStatus as? Int else {
             return
         }
-
+        
         guard let isFavorite = messageData.isFavorite as? Bool else {
             return
         }
@@ -187,7 +197,7 @@ class AnonymouseTableViewCell : UITableViewCell {
         guard let rating = messageData.rating as? Int else {
             return
         }
-       
+        
         
         numLikes!.text = "\(rating)"
         
@@ -204,28 +214,21 @@ class AnonymouseTableViewCell : UITableViewCell {
             downvoteButton!.setImage(UIImage(named: "downvoteEmpty"), for: UIControlState.normal)
         }
         
-
+        
         if isFavorite {
             favoriteButton!.setImage(UIImage(named: "favoriteFilled"), for: UIControlState.normal)
         }
         else {
             favoriteButton!.setImage(UIImage(named: "favoriteEmpty"), for: UIControlState.normal)
         }
-
+        
         upvoteButton!.frame.origin.x = grayFeatureBar!.frame.width - 30
         numLikes!.frame.origin.x = upvoteButton!.frame.origin.x - numLikes!.frame.width - 5
         downvoteButton!.frame.origin.x = numLikes!.frame.origin.x - 30
-        divider!.frame.origin.x = downvoteButton!.frame.origin.x - 10
-        favoriteButton!.frame.origin.x = divider!.frame.origin.x - 35
-    }
-    
-    func createGrayLine() {
-        grayLine = UIView()
-        grayLine!.frame.size.height = 1.0
-        grayLine!.frame.origin.x = 10
-        grayLine!.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
-        
-        self.contentView.addSubview(grayLine!)
+        divider1!.frame.origin.x = downvoteButton!.frame.origin.x - 10
+        favoriteButton!.frame.origin.x = divider1!.frame.origin.x - 35
+        divider2!.frame.origin.x = favoriteButton!.frame.origin.x - 10
+        replyButton!.frame.origin.x = divider2!.frame.origin.x - 35
     }
     
     func createGrayFeatureBar() {
@@ -233,6 +236,8 @@ class AnonymouseTableViewCell : UITableViewCell {
         grayFeatureBar!.frame.origin.x = 10
         grayFeatureBar!.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
         grayFeatureBar!.frame.size.height = AnonymouseTableViewCell.featuresBarHeight
+        grayFeatureBar!.layer.borderColor = UIColor(white: 0.85, alpha: 1.0).cgColor
+        grayFeatureBar!.layer.borderWidth = 1.0
         
         self.contentView.addSubview(grayFeatureBar!)
         
@@ -251,14 +256,14 @@ class AnonymouseTableViewCell : UITableViewCell {
         downvoteButton!.addTarget(self, action: #selector(AnonymouseTableViewCell.featureBarButtonTapped(sender:)), for: UIControlEvents.touchUpInside)
         self.grayFeatureBar!.addSubview(downvoteButton!)
         
-
+        
         favoriteButton = UIButton(frame: CGRect(x: 0.0, y: buttonY, width: 25, height: 25))
         favoriteButton!.tag = 2
         favoriteButton!.alpha = 0.5
         favoriteButton!.setImage(UIImage(named: "favoriteEmpty"), for: UIControlState.normal)
         favoriteButton!.addTarget(self, action: #selector(AnonymouseTableViewCell.featureBarButtonTapped(sender:)), for: UIControlEvents.touchUpInside)
         self.grayFeatureBar!.addSubview(favoriteButton!)
-
+        
         numLikes = UILabel()
         numLikes!.font = AnonymouseTableViewCell.dateFont
         numLikes!.text = "0000"
@@ -270,10 +275,21 @@ class AnonymouseTableViewCell : UITableViewCell {
         self.grayFeatureBar!.addSubview(numLikes!)
         
         let dividerHeight: CGFloat = 25
-        divider = UIView(frame: CGRect( x: 0.0, y: buttonY, width: 1, height: dividerHeight))
-        divider?.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
-        self.grayFeatureBar!.addSubview(divider!)
-
+        divider1 = UIView(frame: CGRect( x: 0.0, y: buttonY, width: 1, height: dividerHeight))
+        divider1?.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+        self.grayFeatureBar!.addSubview(divider1!)
+        
+        divider2 = UIView(frame: CGRect( x: 0.0, y: buttonY, width: 1, height: dividerHeight))
+        divider2?.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+        self.grayFeatureBar!.addSubview(divider2!)
+        
+        replyButton = UIButton(frame: CGRect(x: 0.0, y: buttonY, width: 25, height: 25))
+        replyButton!.tag = 3
+        replyButton!.alpha = 0.5
+        replyButton!.setImage(UIImage(named: "replyEmpty"), for: UIControlState.normal)
+        replyButton!.setImage(UIImage(named: "replyFilled"), for: UIControlState.highlighted)
+        replyButton!.addTarget(self, action: #selector(AnonymouseTableViewCell.featureBarButtonTapped(sender:)), for: UIControlEvents.touchUpInside)
+        self.grayFeatureBar!.addSubview(replyButton!)
     }
     
     
@@ -292,6 +308,12 @@ class AnonymouseTableViewCell : UITableViewCell {
             expandImage.removeFromSuperview()
         }
     }
+
+    func replyTapped() {
+        if isInTable {
+            NotificationCenter.default.post(name: NSNotification.Name("messageWasRepliedTo"), object: nil, userInfo: ["cell": self])
+        }
+    }
     
     func upvoteTapped() {
         guard let messageData = data else {
@@ -303,20 +325,12 @@ class AnonymouseTableViewCell : UITableViewCell {
         if likeStatus != 1 {
             upvoteButton!.setImage(UIImage(named: "upvoteFilled"), for: UIControlState.normal)
             downvoteButton!.setImage(UIImage(named: "downvoteEmpty"), for: UIControlState.normal)
-            
-            if likeStatus == 2 {
-                messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue + 1)
-            }
-            messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue + 1)
-            
-            messageData.likeStatus = 1
             expandAnimate(imageNamed: "upvoteFilled", fromPoint: upvoteButton!.frame.origin, withSuperView: grayFeatureBar!)
         } else {
             upvoteButton!.setImage(UIImage(named: "upvoteEmpty"), for: UIControlState.normal)
-            
-            messageData.likeStatus = 0
-            messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue - 1)
         }
+        
+        messageData.like()
     }
     
     func downvoteTapped() {
@@ -332,19 +346,11 @@ class AnonymouseTableViewCell : UITableViewCell {
             upvoteButton!.setImage(UIImage(named: "upvoteEmpty"), for: UIControlState.normal)
             downvoteButton!.setImage(UIImage(named: "downvoteFilled"), for: UIControlState.normal)
             expandAnimate(imageNamed: "downvoteFilled", fromPoint: downvoteButton!.frame.origin, withSuperView: grayFeatureBar!)
-            
-            if likeStatus == 1 {
-                messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue - 1)
-            }
-            messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue - 1)
-            
-            messageData.likeStatus = 2
         } else {
             downvoteButton!.setImage(UIImage(named: "downvoteEmpty"), for: UIControlState.normal)
-            
-            messageData.likeStatus = 0
-            messageData.rating = NSNumber(integerLiteral: messageData.rating!.intValue + 1)
         }
+        
+        messageData.dislike()
     }
     
     func favoriteTapped() {
@@ -358,7 +364,7 @@ class AnonymouseTableViewCell : UITableViewCell {
         //Favorite Tapped
         if !favoriteStatus {
             favoriteButton!.setImage(UIImage(named: "favoriteFilled"), for: UIControlState.normal)
-
+            
             expandAnimate(imageNamed: "favoriteFilled", fromPoint: favoriteButton!.frame.origin, withSuperView: grayFeatureBar!)
             
             messageData.isFavorite = NSNumber(booleanLiteral: true)
@@ -380,6 +386,9 @@ class AnonymouseTableViewCell : UITableViewCell {
             updateFeatureBar()
         case 2:
             favoriteTapped()
+            updateFeatureBar()
+        case 3:
+            replyTapped()
             updateFeatureBar()
         default:
             break
