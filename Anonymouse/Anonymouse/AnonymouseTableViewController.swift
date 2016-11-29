@@ -121,8 +121,9 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         
         
         // TODO
-        self.automaticallyAdjustsScrollViewInsets = false
-        tableView.contentInset = UIEdgeInsets.zero;
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        //self.automaticallyAdjustsScrollViewInsets = false
+        //tableView.contentInset = UIEdgeInsets.zero;
         
         //Set up the tableView style
         self.tableView.backgroundColor = UIColor.groupTableViewBackground
@@ -153,6 +154,11 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         let yPos: CGFloat = scrollView.contentOffset.y
         print(yPos)
 
+        //self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.automaticallyAdjustsScrollViewInsets = false
+        tableView.contentInset = UIEdgeInsets.zero;
+        print("aloha")
+        
         if (tableView.tableHeaderView == nil && yPos < 0) {
             tableView.tableHeaderView = searchController.searchBar
         }
@@ -175,7 +181,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
         if searchController.isActive && searchController.searchBar.text != "" {
-            frc =  searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
+            frc = searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         } else {
             frc = fetchedResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         }
@@ -198,7 +204,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
         if searchController.isActive && searchController.searchBar.text != "" {
-            frc =  searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
+            frc = searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         } else {
             frc = fetchedResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         }
@@ -235,7 +241,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
         if searchController.isActive && searchController.searchBar.text != "" {
-            frc =  searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
+            frc = searchResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         } else {
             frc = fetchedResultsController as! NSFetchedResultsController<NSFetchRequestResult>
         }
