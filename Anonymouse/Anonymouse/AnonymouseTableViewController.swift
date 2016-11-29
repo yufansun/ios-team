@@ -115,6 +115,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = true
         definesPresentationContext = true
         tableView.tableHeaderView = nil
         
@@ -169,7 +170,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     //This function is part of UITableViewController's built-in classes.
     //It asks for the number of rows in tableView = number of messages = size of cellDataArray.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("in tableView 1")
+        print("in tableView decising the number of rows")
         
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
@@ -192,7 +193,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //Grab the appropriate data from our cellDataArray.
         
-        print("in tableView 2")
+        print("in tableView deciding the message to render")
         
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
@@ -229,7 +230,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         //Notice that MCChatCellData already have a property called cellHeight
         //that depends on the size of the message.
         
-        print("in tableView 3")
+        print("in tableView deciding the height of each cell")
         
         var frc: NSFetchedResultsController<NSFetchRequestResult>
         
@@ -245,7 +246,7 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("in tableView 4")
+        print("in tableView deciding ... detailed view?")
         
         if let selectedCell: AnonymouseTableViewCell = tableView.cellForRow(at: indexPath) as? AnonymouseTableViewCell {
             detailViewController.cellData = selectedCell.data!
