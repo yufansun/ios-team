@@ -17,14 +17,14 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
     var searchRequest: NSFetchRequest<AnonymouseMessageCore>
     
     init(withFetchRequest fetchRequest: NSFetchRequest<AnonymouseMessageCore>) {
-        print("in init")
+        print("in init=======================================")
         self.fetchRequest = fetchRequest
         self.searchRequest = fetchRequest
         super.init(style: UITableViewStyle.plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        print("in init?")
+        print("in init?= ====================================")
         self.fetchRequest = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
         self.searchRequest = NSFetchRequest<AnonymouseMessageCore>(entityName: "AnonymouseMessageCore")
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "date", ascending: false)
@@ -154,10 +154,11 @@ class AnonymouseTableViewController: UITableViewController, NSFetchedResultsCont
         let yPos: CGFloat = scrollView.contentOffset.y
         print(yPos)
 
-        //self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        self.automaticallyAdjustsScrollViewInsets = false
-        tableView.contentInset = UIEdgeInsets.zero;
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        //self.automaticallyAdjustsScrollViewInsets = false
+        //tableView.contentInset = UIEdgeInsets.zero;
         print("aloha")
+        print(self)
         
         if (tableView.tableHeaderView == nil && yPos < 0) {
             tableView.tableHeaderView = searchController.searchBar
