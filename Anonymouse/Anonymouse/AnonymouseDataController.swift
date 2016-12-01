@@ -207,4 +207,15 @@ class AnonymouseDataController: NSObject {
         
         self.saveContext()
     }
+    
+    func extractHashTag(_ str: String) -> [String] {
+        var tags: [String] = []
+        let words: [String] = str.components(separatedBy: " ")
+        for word in words {
+            if word.hasPrefix("#") {
+                tags.append(String(word.characters.dropFirst()))
+            }
+        }
+        return tags
+    }
 }

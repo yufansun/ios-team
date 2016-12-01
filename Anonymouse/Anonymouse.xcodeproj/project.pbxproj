@@ -30,6 +30,8 @@
 		1AE809CB1DD6B10A0009D7D1 /* AnonymouseRatingSentCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE809CA1DD6B10A0009D7D1 /* AnonymouseRatingSentCore.swift */; };
 		1AF2D0671C97856300670C89 /* AnonymouseComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2D0661C97856300670C89 /* AnonymouseComposeViewController.swift */; };
 		1AFEDAE61D986BBC00690EB5 /* AnonymouseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFEDAE51D986BBC00690EB5 /* AnonymouseTabBarController.swift */; };
+		7D0B8D091DF0B13F0071BF1D /* AnonymouseMessageTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0B8D081DF0B13F0071BF1D /* AnonymouseMessageTag.swift */; };
+		7D0B8D0E1DF0B2030071BF1D /* AnonymouseMessageTag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0B8D0D1DF0B2030071BF1D /* AnonymouseMessageTag+CoreDataProperties.swift */; };
 		7DD0BBB41CBC349000CF2268 /* Anonymouse.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7DD0BBB21CBC349000CF2268 /* Anonymouse.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -103,6 +105,8 @@
 		1AE809CA1DD6B10A0009D7D1 /* AnonymouseRatingSentCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseRatingSentCore.swift; sourceTree = "<group>"; };
 		1AF2D0661C97856300670C89 /* AnonymouseComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseComposeViewController.swift; sourceTree = "<group>"; };
 		1AFEDAE51D986BBC00690EB5 /* AnonymouseTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseTabBarController.swift; sourceTree = "<group>"; };
+		7D0B8D081DF0B13F0071BF1D /* AnonymouseMessageTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnonymouseMessageTag.swift; sourceTree = "<group>"; };
+		7D0B8D0D1DF0B2030071BF1D /* AnonymouseMessageTag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AnonymouseMessageTag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7DD0BBB31CBC349000CF2268 /* Anonymouse.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Anonymouse.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -148,6 +152,8 @@
 				1A42E02F1CBED2A100E6EE86 /* AnonymouseMessageCore.swift */,
 				02F9C7871DEDFCE800CA631D /* AnonymouseReplyCore+CoreDataClass.swift */,
 				02F9C7881DEDFCE800CA631D /* AnonymouseReplyCore+CoreDataProperties.swift */,
+				7D0B8D081DF0B13F0071BF1D /* AnonymouseMessageTag.swift */,
+				7D0B8D0D1DF0B2030071BF1D /* AnonymouseMessageTag+CoreDataProperties.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -318,6 +324,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D0B8D091DF0B13F0071BF1D /* AnonymouseMessageTag.swift in Sources */,
 				1A692BBB1DAE964D00C03E1A /* AnonymouseDataController.swift in Sources */,
 				0286D4CA1DEFA10000EEDE07 /* AnonymouseReplyViewCell.swift in Sources */,
 				1ABE12EE1C97521C005923BA /* AnonymouseTableViewCell.swift in Sources */,
@@ -334,6 +341,7 @@
 				1ABE12EA1C9750A6005923BA /* AnonymouseTableViewController.swift in Sources */,
 				172EA8A21D9788DA00D2E127 /* AnonymouseProfileViewController.swift in Sources */,
 				1A932A551DB3CAC7004294A9 /* AnonymouseMessageSentCore.swift in Sources */,
+				7D0B8D0E1DF0B2030071BF1D /* AnonymouseMessageTag+CoreDataProperties.swift in Sources */,
 				7DD0BBB41CBC349000CF2268 /* Anonymouse.xcdatamodeld in Sources */,
 				1A5BA78E1D999FD1005000D5 /* AnonymouseSettingsViewController.swift in Sources */,
 				1AE809CB1DD6B10A0009D7D1 /* AnonymouseRatingSentCore.swift in Sources */,

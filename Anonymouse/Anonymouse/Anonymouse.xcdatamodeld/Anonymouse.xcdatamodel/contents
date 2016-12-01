@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2657" minimumToolsVersion="Xcode 7.0" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 7.0" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AnonymouseMessageCore" representedClassName=".AnonymouseMessageCore" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isFavorite" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -8,6 +8,10 @@
         <attribute name="text" attributeType="String" syncable="YES"/>
         <attribute name="user" attributeType="String" syncable="YES"/>
         <relationship name="ownedMessages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AnonymouseReplyCore" inverseName="parentMessage" inverseEntity="AnonymouseReplyCore" syncable="YES"/>
+    </entity>
+    <entity name="AnonymouseMessageTag" syncable="YES">
+        <attribute name="count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="tag" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="AnonymouseReplyCore" representedClassName=".AnonymouseReplyCore" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -20,5 +24,6 @@
     <elements>
         <element name="AnonymouseMessageCore" positionX="-63" positionY="-18" width="128" height="148"/>
         <element name="AnonymouseReplyCore" positionX="-63" positionY="27" width="128" height="135"/>
+        <element name="AnonymouseMessageTag" positionX="-54" positionY="54" width="128" height="75"/>
     </elements>
 </model>
